@@ -15,4 +15,5 @@
 master() ->
   register(master, self()),
   customer:getCustomerData(),
-  bank:getBankData().
+  bank:getBankData(),
+  customer:matching(customermap).

@@ -28,8 +28,7 @@ createBankProcess(SingleTupleBank) ->
   io:fwrite("~w: ~w~n", [BankName, Totalfunds]),
   timer:sleep(100),
   Rec = list_etslookup(BankName),
-  Totalfunds_1 = element(2, Rec),
-  io:fwrite("Fund ~w", [Totalfunds_1]).
+  Totalfunds_1 = element(2, Rec).
 
 list_etslookup(BankName) ->
   [Rec] = ets:lookup(bankmap, BankName),
@@ -41,14 +40,17 @@ getElements(SingleTupleBank) ->
   {BankName, Totalfunds}.
 
 createAndregister(SingleTupleBank) ->
+  timer:sleep(100),
   Pid = spawn(bank, bankProcess, [SingleTupleBank]),
-  register(element(1, SingleTupleBank), Pid).
+  register(element(1, SingleTupleBank), Pid),
+  io:fwrite("~w", [Pid]).
 
 etsinsert(BankName, Totalfunds) ->
   ets:insert(bankmap, {BankName, Totalfunds}).
 
 bankProcess(Bank) ->
   receive
-    {BankName, Fund} ->
-      io:fwrite("~w", [Bank])
+    {CustomerName, LoanAmount, BankName} ->
+      io:fwrite("~w Requested ~w From ~w~n", [CustomerName, LoanAmount, BankName]),
+      bankProcess(Bank)
   end.
