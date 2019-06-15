@@ -16,17 +16,36 @@
 getBankData() ->
   io:fwrite("-----------------------------------Reading Banks' Data------------------------------- ~n"),
   {ok, Banks} = file:consult("src/banks.txt"),
+  ets:new(bankmap, [ordered_set, named_table, set, public]),
   BankObj = fun(SingleTupleBank) -> createBankProcess(SingleTupleBank) end,
   lists:foreach(BankObj, Banks).
 
 createBankProcess(SingleTupleBank) ->
 
-  Pid = spawn(bank, bankProcess, [SingleTupleBank]),
-  register(element(1, SingleTupleBank), Pid),
+  createAndregister(SingleTupleBank),
+  {BankName, Totalfunds} = getElements(SingleTupleBank),
+  etsinsert(BankName, Totalfunds),
+  io:fwrite("~w: ~w~n", [BankName, Totalfunds]),
+  timer:sleep(100),
+  Rec = list_etslookup(BankName),
+  Totalfunds_1 = element(2, Rec),
+  io:fwrite("Fund ~w", [Totalfunds_1]).
+
+list_etslookup(BankName) ->
+  [Rec] = ets:lookup(bankmap, BankName),
+  Rec.
+
+getElements(SingleTupleBank) ->
   BankName = element(1, SingleTupleBank),
   Totalfunds = element(2, SingleTupleBank),
-  io:fwrite("~w: ~w~n", [BankName, Totalfunds]),
-  timer:sleep(100).
+  {BankName, Totalfunds}.
+
+createAndregister(SingleTupleBank) ->
+  Pid = spawn(bank, bankProcess, [SingleTupleBank]),
+  register(element(1, SingleTupleBank), Pid).
+
+etsinsert(BankName, Totalfunds) ->
+  ets:insert(bankmap, {BankName, Totalfunds}).
 
 bankProcess(Bank) ->
   receive

@@ -14,17 +14,25 @@
 
 getCustomerData() ->
   io:fwrite("get customer data is called ~n"),
+  ets:new(customermap, [ordered_set, named_table, set, public]),
   {ok, Customers} = file:consult("src/customers.txt"),
   CustomersObj = fun(SingleTupleCustomer) -> createCustomerProcess(SingleTupleCustomer) end,
   lists:foreach(CustomersObj, Customers).
 
 createCustomerProcess(SingleTupleCustomer) ->
-  Pid = spawn(customer, customerProcess, [SingleTupleCustomer]),
+  createAndRegister(SingleTupleCustomer),
+  {CustomerName, LoanRequested} = getElements(SingleTupleCustomer),
+  io:fwrite("~w: ~w~n", [CustomerName, LoanRequested]),
+  timer:sleep(100).
+
+getElements(SingleTupleCustomer) ->
   CustomerName = element(1, SingleTupleCustomer),
   LoanRequested = element(2, SingleTupleCustomer),
-  io:fwrite("~w: ~w~n", [CustomerName, LoanRequested]),
-  register(element(1, SingleTupleCustomer), Pid),
-  timer:sleep(100).
+  {CustomerName, LoanRequested}.
+
+createAndRegister(SingleTupleCustomer) ->
+  Pid = spawn(customer, customerProcess, [SingleTupleCustomer]),
+  register(element(1, SingleTupleCustomer), Pid).
 
 customerProcess(Customer) ->
   receive
