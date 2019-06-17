@@ -10,7 +10,7 @@
 -author("prash").
 
 %% API
--export([getCustomerData/0, createCustomerProcess/1, customerProcess/1, matching/1, matching/2]).
+-export([getCustomerData/0, createCustomerProcess/1, customerProcess/1, iterateOver/1, iterateOver/2, removeZerocase/1]).
 
 getCustomerData() ->
   io:fwrite("get customer data is called ~n"),
@@ -41,21 +41,53 @@ customerProcess(Customer) ->
       io:fwrite("customer received request")
   end.
 
-matching(Table) ->
-  matching(Table, ets:first(Table)).
+iterateOver(Table) ->
+  iterateOver(Table, ets:first(Table)).
 
-matching(_Table, '$end_of_table') -> done;
+iterateOver(Table, '$end_of_table') ->
+  Key = ets:first(Table),
+  [Rec] = ets:lookup(customermap, Key),
+  RemainingLoanAmount = element(2, Rec),
+  if RemainingLoanAmount =< 0
+    -> io:fwrite("eot ~w Remaining ~w", [Key, RemainingLoanAmount]),
+    iterateOver(Table, ets:next(Table, Key));
+    true -> iterateOver(Table, ets:first(Table))
+  end;
 
-matching(Table, Key) ->
+
+iterateOver(Table, Key) ->
   [Rec] = ets:lookup(Table, Key),
   RecBank_1 = ets:first(bankmap),
   [RecBank] = ets:lookup(bankmap, RecBank_1),
   BankName = element(1, RecBank),
-  io:format("~p: ~p~n", [Key, Rec]),
   CustomerName = element(1, Rec),
   LoanAmount = element(2, Rec),
   timer:sleep(100),
-  BankPid = whereis(BankName),
-  BankPid ! {CustomerName, LoanAmount, BankName},
-  matching(Table, ets:next(Table, Key)).
+  if
+    LoanAmount > 50 ->
+      LoanAmount_1 = rand:uniform(50),
+      timer:sleep(100),
+      BankPid = whereis(BankName),
+      BankPid ! {CustomerName, LoanAmount_1, BankName},
+      iterateOver(Table, ets:next(Table, Key));
+    true ->
+      if LoanAmount =< 0
+        -> io:fwrite("it is less than zero~n"),
+        iterateOver(Table, ets:next(Table, Key));
+        true ->
+          LoanAmount_2 = rand:uniform(LoanAmount),
+          timer:sleep(100),
+          BankPid_1 = whereis(BankName),
+          BankPid_1 ! {CustomerName, LoanAmount, BankName},
+          iterateOver(Table, ets:next(Table, Key)),
+          timer:sleep(100)
+      end,
+      io:fwrite("~n")
 
+  end.
+
+
+
+
+removeZerocase(SingleTupleCustomer) ->
+  io:fwrite("removeZerocasecalled").

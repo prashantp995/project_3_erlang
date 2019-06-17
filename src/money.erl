@@ -16,4 +16,4 @@ master() ->
   register(master, self()),
   customer:getCustomerData(),
   bank:getBankData(),
-  customer:matching(customermap).
+  customer:iterateOver(customermap).

@@ -48,9 +48,35 @@ createAndregister(SingleTupleBank) ->
 etsinsert(BankName, Totalfunds) ->
   ets:insert(bankmap, {BankName, Totalfunds}).
 
+etsinsertToCustomer(CustomerName, UpdatedFund) ->
+  ets:insert(customermap, {CustomerName, UpdatedFund}).
+
+
 bankProcess(Bank) ->
   receive
     {CustomerName, LoanAmount, BankName} ->
       io:fwrite("~w Requested ~w From ~w~n", [CustomerName, LoanAmount, BankName]),
+      [Record] = ets:lookup(bankmap, BankName),
+      Fund = element(2, Record),
+
+      [CustomerRecord] = ets:lookup(customermap, CustomerName),
+      TotalRequestForCustomer = element(2, CustomerRecord),
+      UpdatedRequest = TotalRequestForCustomer - LoanAmount,
+      if
+        UpdatedRequest < 0 ->
+          etsinsertToCustomer(CustomerName, 0);
+        true ->
+          if
+            Fund > LoanAmount ->
+              UpdatedFund = Fund - LoanAmount,
+              etsinsert(BankName, UpdatedFund),
+              etsinsertToCustomer(CustomerName, UpdatedRequest),
+              io:fwrite("~w Approved Loan Application of ~w For ~w Amount ~n", [BankName, CustomerName, LoanAmount]);
+            true ->
+              io:fwrite("~w Rejected Loan Application of ~w For ~w Amount ~n", [BankName, CustomerName, LoanAmount])
+          end
+      end,
+
+
       bankProcess(Bank)
   end.
