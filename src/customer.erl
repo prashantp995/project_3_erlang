@@ -26,7 +26,8 @@ startLoanProcess(CustomerName) ->
   [Rec] = ets:lookup(customermap, CustomerName),
   LoanAmountRequest = element(2, Rec),
   {ok, Banks} = file:consult("src/banks.txt"),
-  startLoan(CustomerName, LoanAmountRequest, Banks).
+  startLoan(CustomerName, LoanAmountRequest, Banks),
+  timer:sleep(100).
 
 startLoan(CustomerName, RequestedAmount, PossibleBankList) ->
   if
@@ -40,10 +41,14 @@ startLoan(CustomerName, RequestedAmount, PossibleBankList) ->
       RandomIndex = rand:uniform(length(PossibleBankList)),
       RandomBank = lists:nth(RandomIndex, PossibleBankList),
       {SelectedBank, _} = lists:nth(RandomIndex, PossibleBankList),
+      RandomBankTuple = lists:nth(RandomIndex, PossibleBankList),
+      timer:sleep(100),
       MasterProcessID = whereis(master),
+      timer:sleep(100),
       BankProcessId = whereis(SelectedBank),
+      io:fwrite("BankProcess Id for ~w  is ~w ", [SelectedBank, BankProcessId]),
       MasterProcessID ! {loanRequest, SelectedBank, CustomerName, RandomAmountToRequest},
-      BankProcessId ! {requestloan, CustomerName, RandomAmountToRequest, RandomBank};
+      BankProcessId ! {requestloan, CustomerName, RandomAmountToRequest, SelectedBank, RandomBankTuple, RandomIndex};
     true -> false
   end.
 
@@ -76,8 +81,21 @@ customerProcess(CustomerName, AmountRequested, EligibleBanks, ApprovedAmount) ->
     {CustomerName, AmountRequested, EligibleBanks, ApprovedAmount} ->
       io:fwrite("customer loan processed for request-->~w", [CustomerName]),
       customerProcess(CustomerName, AmountRequested, EligibleBanks, ApprovedAmount);
-    {grantReq, LoanAmount} ->
+    {requestApproved, LoanAmount} ->
       io:fwrite("LoanApproved for amount ~w ~n", [LoanAmount]),
       startLoan(CustomerName, AmountRequested - LoanAmount, EligibleBanks),
-      customerProcess(CustomerName, AmountRequested - LoanAmount, EligibleBanks, ApprovedAmount + LoanAmount)
+      customerProcess(CustomerName, AmountRequested - LoanAmount, EligibleBanks, ApprovedAmount + LoanAmount);
+    {denieReq, LoanAmount, RandomBankTuple, RandomIndex} ->
+      Tuple = lists:nth(RandomIndex, EligibleBanks),
+      NewBanks = lists:delete(Tuple, EligibleBanks),
+      BankLength = length(NewBanks),
+      if
+        BankLength > 0 ->
+          startLoan(CustomerName, AmountRequested, EligibleBanks),
+          customerProcess(CustomerName, AmountRequested, EligibleBanks, ApprovedAmount);
+        true ->
+          io:fwrite("No Banks"),
+          customerProcess(CustomerName, AmountRequested, EligibleBanks, ApprovedAmount)
+      end
+
   end.

@@ -29,6 +29,9 @@ acceptMessages() ->
   receive
     {loanRequest, Bank, CustomerName, Amount} ->
       io:format("~p requests a loan of ~p dollar(s) from ~p~n", [CustomerName, Amount, Bank]),
+      acceptMessages();
+    {requestApproved, Bank, CustomerName, ApprovedAmount} ->
+      io:format("~p approves a loan of ~p dollar(s) of ~p~n", [Bank, ApprovedAmount, CustomerName]),
       acceptMessages()
 
   end.

@@ -53,11 +53,23 @@ etsinsertToCustomer(CustomerName, UpdatedFund) ->
 
 bankProcess(Name, TotalFund) ->
   receive
-    {requestloan, NameofCustomer, AmountRequested, RequestedBank} ->
-      CustomerID = whereis(NameofCustomer),
-      timer:sleep(100),
-      CustomerID ! {grantReq, AmountRequested},
-      bankProcess(Name, TotalFund);
+    {requestloan, NameofCustomer, AmountRequested, RequestedBank, RandomBankTuple, RandomIndex} ->
+      if
+        (AmountRequested > 0) and (TotalFund >= AmountRequested) and (TotalFund > 0) ->
+          MasterID = whereis(master),
+          MasterID ! {requestApproved, Name, NameofCustomer, AmountRequested},
+          CustomerID = whereis(NameofCustomer),
+          CustomerID ! {requestApproved, AmountRequested},
+          bankProcess(Name, TotalFund - AmountRequested);
+        true ->
+          io:fwrite("LoanRequest Denied for the ~w", [NameofCustomer]),
+          MasterID = whereis(master),
+          MasterID ! {denieReq, Name, NameofCustomer, AmountRequested},
+          CustomerID = whereis(NameofCustomer),
+          CustomerID ! {denieReq, AmountRequested, RandomBankTuple, RandomIndex},
+          bankProcess(Name, TotalFund)
+      end;
+
     {CustomerName, LoanAmount, BankName} ->
       io:fwrite("~w Requested ~w From ~w~n", [CustomerName, LoanAmount, BankName]),
       [Record] = ets:lookup(bankmap, BankName),
