@@ -10,84 +10,74 @@
 -author("prash").
 
 %% API
--export([getCustomerData/0, createCustomerProcess/1, customerProcess/1, iterateOver/1, iterateOver/2, removeZerocase/1]).
+-export([getCustomerData/0, createCustomerProcess/2, customerProcess/4,
+  startLoanProcess/1, startLoan/3, createAndRegister/2]).
 
 getCustomerData() ->
   io:fwrite("get customer data is called ~n"),
   ets:new(customermap, [ordered_set, named_table, set, public]),
   {ok, Customers} = file:consult("src/customers.txt"),
-  CustomersObj = fun(SingleTupleCustomer) -> createCustomerProcess(SingleTupleCustomer) end,
+  {ok, EligibleBanks} = file:consult("src/banks.txt"),
+  CustomersObj = fun(SingleTupleCustomer) ->
+    createCustomerProcess(SingleTupleCustomer, EligibleBanks) end,
   lists:foreach(CustomersObj, Customers).
 
-createCustomerProcess(SingleTupleCustomer) ->
-  createAndRegister(SingleTupleCustomer),
+startLoanProcess(CustomerName) ->
+  [Rec] = ets:lookup(customermap, CustomerName),
+  LoanAmountRequest = element(2, Rec),
+  {ok, Banks} = file:consult("src/banks.txt"),
+  startLoan(CustomerName, LoanAmountRequest, Banks).
+
+startLoan(CustomerName, RequestedAmount, PossibleBankList) ->
+  if
+    RequestedAmount /= 0 ->
+      timer:sleep(100),
+      if
+        RequestedAmount < 50 ->
+          RandomAmountToRequest = getRandomNumber(RequestedAmount);
+        true -> RandomAmountToRequest = getRandomNumber(50)
+      end,
+      RandomIndex = rand:uniform(length(PossibleBankList)),
+      RandomBank = lists:nth(RandomIndex, PossibleBankList),
+      {SelectedBank, _} = lists:nth(RandomIndex, PossibleBankList),
+      MasterProcessID = whereis(master),
+      BankProcessId = whereis(SelectedBank),
+      MasterProcessID ! {loanRequest, SelectedBank, CustomerName, RandomAmountToRequest},
+      BankProcessId ! {requestloan, CustomerName, RandomAmountToRequest, RandomBank};
+    true -> false
+  end.
+
+getRandomNumber(RequestedAmount) ->
+  rand:uniform(RequestedAmount).
+
+createCustomerProcess(SingleTupleCustomer, EligibleBanks) ->
+  createAndRegister(SingleTupleCustomer, EligibleBanks),
   {CustomerName, LoanRequested} = getElements(SingleTupleCustomer),
   ets:insert(customermap, {CustomerName, LoanRequested}),
   io:fwrite("~w: ~w~n", [CustomerName, LoanRequested]),
-  timer:sleep(100).
+  timer:sleep(100),
+  startLoanProcess(CustomerName).
 
 getElements(SingleTupleCustomer) ->
   CustomerName = element(1, SingleTupleCustomer),
   LoanRequested = element(2, SingleTupleCustomer),
   {CustomerName, LoanRequested}.
 
-createAndRegister(SingleTupleCustomer) ->
-  Pid = spawn(customer, customerProcess, [SingleTupleCustomer]),
-  register(element(1, SingleTupleCustomer), Pid).
+createAndRegister(SingleTupleCustomer, EligibleBanks) ->
+  CustomerName = element(1, SingleTupleCustomer),
+  AmountRequested = element(2, SingleTupleCustomer),
+  Pid = spawn(customer, customerProcess, [CustomerName, AmountRequested, EligibleBanks, 0]),
+  register(CustomerName, Pid),
+  io:fwrite("~w", [Pid]).
 
-customerProcess(Customer) ->
+customerProcess(CustomerName, AmountRequested, EligibleBanks, ApprovedAmount) ->
+
   receive
-    {Name, LoanRequested} ->
-      io:fwrite("customer received request")
+    {CustomerName, AmountRequested, EligibleBanks, ApprovedAmount} ->
+      io:fwrite("customer loan processed for request-->~w", [CustomerName]),
+      customerProcess(CustomerName, AmountRequested, EligibleBanks, ApprovedAmount);
+    {grantReq, LoanAmount} ->
+      io:fwrite("LoanApproved for amount ~w ~n", [LoanAmount]),
+      startLoan(CustomerName, AmountRequested - LoanAmount, EligibleBanks),
+      customerProcess(CustomerName, AmountRequested - LoanAmount, EligibleBanks, ApprovedAmount + LoanAmount)
   end.
-
-iterateOver(Table) ->
-  iterateOver(Table, ets:first(Table)).
-
-iterateOver(Table, '$end_of_table') ->
-  Key = ets:first(Table),
-  [Rec] = ets:lookup(customermap, Key),
-  RemainingLoanAmount = element(2, Rec),
-  if RemainingLoanAmount =< 0
-    -> io:fwrite("eot ~w Remaining ~w", [Key, RemainingLoanAmount]),
-    iterateOver(Table, ets:next(Table, Key));
-    true -> iterateOver(Table, ets:first(Table))
-  end;
-
-
-iterateOver(Table, Key) ->
-  [Rec] = ets:lookup(Table, Key),
-  RecBank_1 = ets:first(bankmap),
-  [RecBank] = ets:lookup(bankmap, RecBank_1),
-  BankName = element(1, RecBank),
-  CustomerName = element(1, Rec),
-  LoanAmount = element(2, Rec),
-  timer:sleep(100),
-  if
-    LoanAmount > 50 ->
-      LoanAmount_1 = rand:uniform(50),
-      timer:sleep(100),
-      BankPid = whereis(BankName),
-      BankPid ! {CustomerName, LoanAmount_1, BankName},
-      iterateOver(Table, ets:next(Table, Key));
-    true ->
-      if LoanAmount =< 0
-        -> io:fwrite("it is less than zero~n"),
-        iterateOver(Table, ets:next(Table, Key));
-        true ->
-          LoanAmount_2 = rand:uniform(LoanAmount),
-          timer:sleep(100),
-          BankPid_1 = whereis(BankName),
-          BankPid_1 ! {CustomerName, LoanAmount, BankName},
-          iterateOver(Table, ets:next(Table, Key)),
-          timer:sleep(100)
-      end,
-      io:fwrite("~n")
-
-  end.
-
-
-
-
-removeZerocase(SingleTupleCustomer) ->
-  io:fwrite("removeZerocasecalled").

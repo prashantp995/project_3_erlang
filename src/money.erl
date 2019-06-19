@@ -10,10 +10,25 @@
 -author("prash").
 
 %% API
--export([master/0]).
+-export([master/0, acceptMessages/0]).
 
 master() ->
-  register(master, self()),
-  customer:getCustomerData(),
+  register(masterprocess, self()),
+  Pid = spawn(money, acceptMessages, []),
+  register(master, Pid),
   bank:getBankData(),
-  customer:iterateOver(customermap).
+  customer:getCustomerData(),
+  %customer:iterateOver(customermap),
+  timer:sleep(100),
+
+  timer:sleep(100).
+
+
+
+acceptMessages() ->
+  receive
+    {loanRequest, Bank, CustomerName, Amount} ->
+      io:format("~p requests a loan of ~p dollar(s) from ~p~n", [CustomerName, Amount, Bank]),
+      acceptMessages()
+
+  end.
