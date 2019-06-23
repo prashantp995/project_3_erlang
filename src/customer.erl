@@ -11,13 +11,17 @@
 
 %% API
 -export([getCustomerData/0, createCustomerProcess/2, customerProcess/4,
-  startLoanProcess/1, startLoan/3, createAndRegister/2]).
+  startLoanProcess/1, startLoan/3, createAndRegister/2, printObjectives/1]).
 
 getCustomerData() ->
-  io:fwrite("get customer data is called ~n"),
   ets:new(customermap, [ordered_set, named_table, set, public]),
+  ets:new(customerinit, [ordered_set, named_table, set, public]),
   {ok, Customers} = file:consult("src/customers.txt"),
   {ok, EligibleBanks} = file:consult("src/banks.txt"),
+  io:fwrite("** Customers and loan objectives ** ~n"),
+  CustomerData = fun(SingleTupleCustomer) ->
+    printObjectives(SingleTupleCustomer) end,
+  lists:foreach(CustomerData, Customers),
   CustomersObj = fun(SingleTupleCustomer) ->
     createCustomerProcess(SingleTupleCustomer, EligibleBanks) end,
   lists:foreach(CustomersObj, Customers).
@@ -26,8 +30,7 @@ startLoanProcess(CustomerName) ->
   [Rec] = ets:lookup(customermap, CustomerName),
   LoanAmountRequest = element(2, Rec),
   {ok, Banks} = file:consult("src/banks.txt"),
-  startLoan(CustomerName, LoanAmountRequest, Banks),
-  timer:sleep(100).
+  startLoan(CustomerName, LoanAmountRequest, Banks).
 
 startLoan(CustomerName, RequestedAmount, PossibleBankList) ->
   if
@@ -38,19 +41,24 @@ startLoan(CustomerName, RequestedAmount, PossibleBankList) ->
           RandomAmountToRequest = getRandomNumber(RequestedAmount);
         true -> RandomAmountToRequest = getRandomNumber(50)
       end,
-      RandomIndex = rand:uniform(length(PossibleBankList)),
-      RandomBank = lists:nth(RandomIndex, PossibleBankList),
-      {SelectedBank, _} = lists:nth(RandomIndex, PossibleBankList),
+      {RandomIndex, SelectedBank} = selectRandomBank(PossibleBankList),
       RandomBankTuple = lists:nth(RandomIndex, PossibleBankList),
-      timer:sleep(100),
-      MasterProcessID = whereis(master),
-      timer:sleep(100),
-      BankProcessId = whereis(SelectedBank),
-      io:fwrite("BankProcess Id for ~w  is ~w ", [SelectedBank, BankProcessId]),
+      {MasterProcessID, BankProcessId} = getMasterAndBankProcessID(SelectedBank),
       MasterProcessID ! {loanRequest, SelectedBank, CustomerName, RandomAmountToRequest},
-      BankProcessId ! {requestloan, CustomerName, RandomAmountToRequest, SelectedBank, RandomBankTuple, RandomIndex};
+      BankProcessId ! {requestloan, CustomerName, RandomAmountToRequest, SelectedBank, RandomBankTuple, RandomIndex, PossibleBankList};
     true -> false
   end.
+
+selectRandomBank(PossibleBankList) ->
+  RandomIndex = rand:uniform(length(PossibleBankList)),
+  RandomBank = lists:nth(RandomIndex, PossibleBankList),
+  {SelectedBank, _} = lists:nth(RandomIndex, PossibleBankList),
+  {RandomIndex, SelectedBank}.
+
+getMasterAndBankProcessID(SelectedBank) ->
+  MasterProcessID = whereis(master),
+  BankProcessId = whereis(SelectedBank),
+  {MasterProcessID, BankProcessId}.
 
 getRandomNumber(RequestedAmount) ->
   rand:uniform(RequestedAmount).
@@ -59,6 +67,7 @@ createCustomerProcess(SingleTupleCustomer, EligibleBanks) ->
   createAndRegister(SingleTupleCustomer, EligibleBanks),
   {CustomerName, LoanRequested} = getElements(SingleTupleCustomer),
   ets:insert(customermap, {CustomerName, LoanRequested}),
+  ets:insert(customerinit, {CustomerName, LoanRequested}),
   io:fwrite("~w: ~w~n", [CustomerName, LoanRequested]),
   timer:sleep(100),
   startLoanProcess(CustomerName).
@@ -71,9 +80,13 @@ getElements(SingleTupleCustomer) ->
 createAndRegister(SingleTupleCustomer, EligibleBanks) ->
   CustomerName = element(1, SingleTupleCustomer),
   AmountRequested = element(2, SingleTupleCustomer),
+  Pid = spawnAndRegister(CustomerName, AmountRequested, EligibleBanks),
+  io:fwrite("~w", [Pid]).
+
+spawnAndRegister(CustomerName, AmountRequested, EligibleBanks) ->
   Pid = spawn(customer, customerProcess, [CustomerName, AmountRequested, EligibleBanks, 0]),
   register(CustomerName, Pid),
-  io:fwrite("~w", [Pid]).
+  Pid.
 
 customerProcess(CustomerName, AmountRequested, EligibleBanks, ApprovedAmount) ->
 
@@ -81,21 +94,22 @@ customerProcess(CustomerName, AmountRequested, EligibleBanks, ApprovedAmount) ->
     {CustomerName, AmountRequested, EligibleBanks, ApprovedAmount} ->
       io:fwrite("customer loan processed for request-->~w", [CustomerName]),
       customerProcess(CustomerName, AmountRequested, EligibleBanks, ApprovedAmount);
-    {requestApproved, LoanAmount} ->
-      io:fwrite("LoanApproved for amount ~w ~n", [LoanAmount]),
-      startLoan(CustomerName, AmountRequested - LoanAmount, EligibleBanks),
-      customerProcess(CustomerName, AmountRequested - LoanAmount, EligibleBanks, ApprovedAmount + LoanAmount);
-    {denieReq, LoanAmount, RandomBankTuple, RandomIndex} ->
-      Tuple = lists:nth(RandomIndex, EligibleBanks),
-      NewBanks = lists:delete(Tuple, EligibleBanks),
-      BankLength = length(NewBanks),
+    {requestApproved, LoanAmount, PossibleBankList} ->
+      startLoan(CustomerName, AmountRequested - LoanAmount, PossibleBankList),
+      customerProcess(CustomerName, AmountRequested - LoanAmount, PossibleBankList, ApprovedAmount + LoanAmount);
+    {deniedRequest, LoanAmount, RandomBankTuple, BankPositionInMap, PossibleBankList} ->
+      BankLength = length(PossibleBankList),
       if
         BankLength > 0 ->
-          startLoan(CustomerName, AmountRequested, EligibleBanks),
-          customerProcess(CustomerName, AmountRequested, EligibleBanks, ApprovedAmount);
+          startLoan(CustomerName, AmountRequested, PossibleBankList),
+          customerProcess(CustomerName, AmountRequested, PossibleBankList, ApprovedAmount);
         true ->
-          io:fwrite("No Banks"),
-          customerProcess(CustomerName, AmountRequested, EligibleBanks, ApprovedAmount)
+          io:fwrite("~n")
       end
 
   end.
+
+
+printObjectives(SingleTupleCustomer) ->
+  {CustomerName, LoanRequested} = getElements(SingleTupleCustomer),
+  io:fwrite("~w : ~w ~n", [CustomerName, LoanRequested]).
