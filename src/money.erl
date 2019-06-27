@@ -14,9 +14,12 @@
 
 start() ->
   register(masterprocess, self()),
-  bank:getBankData(),
   Pid = spawn(money, acceptMessages, []),
   register(master, Pid),
+  timer:sleep(50),
+  io:fwrite("** Banks and financial resources ** ~n"),
+  bank:getBankData(),
+  io:fwrite("** Customers and loan objectives ** ~n"),
   customer:getCustomerData().
 
 
@@ -35,7 +38,7 @@ printTable(Table, Key) ->
 
 lookupBankTableAndPrint(Table, Key) ->
   [RemainingBalance] = ets:lookup(Table, Key),
-  io:fwrite("~p has ~w dollar(s) remaining.~n", [Key, element(2, RemainingBalance)]).
+  io:fwrite("~w has ~w dollar(s) remaining.~n", [Key, element(2, RemainingBalance)]).
 
 lookupCustomerTableAndPrint(Table, Key) ->
   [PendingBalance] = ets:lookup(Table, Key),
@@ -44,23 +47,29 @@ lookupCustomerTableAndPrint(Table, Key) ->
   ObjectiveBalanceValue = element(2, Objective),
   TotalBorrowed = ObjectiveBalanceValue - PendingBalanceValue,
   if PendingBalanceValue == 0 ->
-    io:fwrite("~p has reached objective of ~w dollar(s) Woo Hoo!.~n", [Key, ObjectiveBalanceValue]);
+    io:fwrite("~w has reached objective of ~w dollar(s) Woo Hoo!.~n", [Key, ObjectiveBalanceValue]);
     true ->
-      io:fwrite("~p was only able to borrow ~w dollar(s) Boo Hoo!.~n", [Key, TotalBorrowed])
+      io:fwrite("~w was only able to borrow ~w dollar(s) Boo Hoo!.~n", [Key, TotalBorrowed])
   end.
 
 acceptMessages() ->
   receive
+    {pritCustomerObjective, CustomerName, LoanRequested} ->
+      io:fwrite("~w : ~w ~n", [CustomerName, LoanRequested]),
+      acceptMessages();
+    {pritInitialBankDetails, BankName, Totalfunds} ->
+      io:fwrite("~w : ~w ~n", [BankName, Totalfunds]),
+      acceptMessages();
     {loanRequest, Bank, CustomerName, Amount} ->
-      io:format("~p requests a loan of ~p dollar(s) from ~p~n", [CustomerName, Amount, Bank]),
+      io:format("~w requests a loan of ~w dollar(s) from ~w~n", [CustomerName, Amount, Bank]),
       acceptMessages();
     {requestApproved, Bank, CustomerName, ApprovedAmount} ->
-      io:format("~p approves a loan of ~p dollar(s) of ~p~n", [Bank, ApprovedAmount, CustomerName]),
+      io:format("~w approves a loan of ~w dollar(s) of ~w~n", [Bank, ApprovedAmount, CustomerName]),
       acceptMessages();
     {deniedRequest, Name, NameofCustomer, AmountRequested} ->
-      io:format("~p denied a loan of ~p dollar(s) of ~p~n", [Name, AmountRequested, NameofCustomer]),
+      io:format("~w denied a loan of ~w dollar(s) of ~w~n", [Name, AmountRequested, NameofCustomer]),
       acceptMessages()
-  after (800) ->
+  after (1000) ->
     io:format("** final Result ***~n"),
     printTable(bankmap),
     printTable(customermap)

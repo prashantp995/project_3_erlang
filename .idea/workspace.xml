@@ -37,75 +37,86 @@
     <session id="581871845">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="5" />
+          <entry key="project.closed" value="6" />
           <entry key="project.open.time.0" value="1" />
           <entry key="project.open.time.1" value="3" />
           <entry key="project.open.time.2" value="1" />
-          <entry key="project.open.time.6" value="2" />
-          <entry key="project.opened" value="7" />
+          <entry key="project.open.time.6" value="3" />
+          <entry key="project.opened" value="8" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="erl" value="55" />
-          <entry key="txt" value="8" />
+          <entry key="erl" value="58" />
+          <entry key="java" value="1" />
+          <entry key="txt" value="10" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="Erlang" value="55" />
-          <entry key="PLAIN_TEXT" value="8" />
+          <entry key="Erlang" value="58" />
+          <entry key="JAVA" value="1" />
+          <entry key="PLAIN_TEXT" value="10" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="Erlang Console" value="605" />
-          <entry key="erl" value="8480" />
-          <entry key="txt" value="197" />
+          <entry key="Erlang Console" value="776" />
+          <entry key="erl" value="8973" />
+          <entry key="txt" value="209" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Erlang" value="9085" />
-          <entry key="PLAIN_TEXT" value="197" />
+          <entry key="Erlang" value="9749" />
+          <entry key="PLAIN_TEXT" value="209" />
         </counts>
       </usages-collector>
     </session>
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/money.erl">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-521">
-              <caret line="15" column="7" lean-forward="true" selection-start-line="15" selection-start-column="7" selection-end-line="15" selection-end-column="7" />
+            <state relative-caret-position="300">
+              <caret line="15" column="5" selection-start-line="15" selection-start-column="5" selection-end-line="15" selection-end-column="5" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://C:/Program Files/erl10.4/lib/stdlib-3.9/src/lists.erl">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="26740">
-              <caret line="1337" selection-start-line="1337" selection-end-line="1337" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/customers.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret column="10" selection-start-column="10" selection-end-column="10" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/customer.erl">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="111">
-              <caret line="32" column="52" selection-start-line="32" selection-start-column="52" selection-end-line="32" selection-end-column="52" />
+            <state relative-caret-position="214">
+              <caret line="100" column="41" selection-start-line="100" selection-start-column="41" selection-end-line="100" selection-end-column="41" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://C:/Program Files/erl10.4/lib/crypto-4.5/src/crypto.erl">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="28100">
+              <caret line="1405" column="34" selection-start-line="1405" selection-start-column="29" selection-end-line="1405" selection-end-column="34" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://C:/Program Files/erl10.4/lib/stdlib-3.9/src/random.erl">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="380">
+              <caret line="19" column="11" selection-start-line="19" selection-start-column="11" selection-end-line="19" selection-end-column="11" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://C:/Program Files/erl10.4/lib/stdlib-3.9/src/rand.erl">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="11080">
+              <caret line="554" selection-start-line="554" selection-end-line="554" />
             </state>
           </provider>
         </entry>
@@ -114,7 +125,16 @@
         <entry file="file://$PROJECT_DIR$/src/banks.txt">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="40">
-              <caret line="2" column="10" lean-forward="true" selection-start-line="2" selection-start-column="10" selection-end-line="2" selection-end-column="10" />
+              <caret line="2" column="8" selection-start-line="2" selection-start-column="8" selection-end-line="2" selection-end-column="8" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/customers.txt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="60">
+              <caret line="3" column="10" selection-start-line="3" selection-start-column="10" selection-end-line="3" selection-end-column="10" />
             </state>
           </provider>
         </entry>
@@ -122,8 +142,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/bank.erl">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1876">
-              <caret line="15" selection-start-line="15" selection-end-line="15" />
+            <state relative-caret-position="980">
+              <caret line="49" column="8" selection-start-line="49" selection-start-column="8" selection-end-line="49" selection-end-column="8" />
             </state>
           </provider>
         </entry>
@@ -139,18 +159,9 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>random</find>
-      <find>function(</find>
-      <find>length</find>
-      <find>Size</find>
-      <find>element</find>
-      <find>rand:</find>
-      <find>rand</find>
-      <find>&quot;src</find>
       <find>LoanApproved</find>
       <find>customerProcess</find>
       <find>loanRequest</find>
-      <find>src/</find>
       <find>init</find>
       <find>grantReq</find>
       <find>LoanRequest Denied for the</find>
@@ -168,7 +179,16 @@
       <find>No Banks</find>
       <find>new banklist for</find>
       <find>printDetails</find>
+      <find>ok</find>
       <find>displayBankData</find>
+      <find>BankLength</find>
+      <find>MasterPID</find>
+      <find>rang</find>
+      <find>range</find>
+      <find>timer:sleep</find>
+      <find>~p</find>
+      <find>timer</find>
+      <find>src/</find>
     </findStrings>
     <replaceStrings>
       <replace>requestApproved</replace>
@@ -176,6 +196,8 @@
       <replace>UpdatedBalance</replace>
       <replace>printObjectives</replace>
       <replace>printTable</replace>
+      <replace>ListSize</replace>
+      <replace>~w</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -185,10 +207,10 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/src/banks.txt" />
-        <option value="$PROJECT_DIR$/src/bank.erl" />
         <option value="$PROJECT_DIR$/src/customers.txt" />
-        <option value="$PROJECT_DIR$/src/customer.erl" />
         <option value="$PROJECT_DIR$/src/money.erl" />
+        <option value="$PROJECT_DIR$/src/bank.erl" />
+        <option value="$PROJECT_DIR$/src/customer.erl" />
       </list>
     </option>
   </component>
@@ -199,26 +221,49 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-10" />
-    <option name="width" value="980" />
-    <option name="height" value="1050" />
+    <option name="x" value="85" />
+    <option name="y" value="25" />
+    <option name="width" value="1750" />
+    <option name="height" value="970" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
-    <panes />
+    <panes>
+      <pane id="PackagesPane" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="Project_1_erlang" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Project_1_erlang" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Project_1_erlang" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Project_1_erlang" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="Scope" />
+    </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1561310659464" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1561336735965" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="settings.editor.selected.configurable" value="editor.preferences.gutterIcons" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\prash\IdeaProjects\Project_1_erlang\src" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\prash\IdeaProjects\Project_1_erlang\src" />
     </key>
@@ -300,17 +345,18 @@
       <workItem from="1560952365573" duration="5563000" />
       <workItem from="1560983584170" duration="463000" />
       <workItem from="1561237440352" duration="11844000" />
-      <workItem from="1561300057723" duration="6903000" />
+      <workItem from="1561300057723" duration="20847000" />
+      <workItem from="1561594472711" duration="602000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="88895000" />
+    <option name="totallyTimeSpent" value="103441000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="848" extended-state="6" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" weight="0.1590604" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.16107382" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Designer" order="2" />
       <window_info id="Image Layers" order="3" />
@@ -319,15 +365,15 @@
       <window_info id="Capture Tool" order="6" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32960895" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.5083799" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.6243017" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.6634078" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info active="true" anchor="bottom" auto_hide="true" id="Terminal" order="7" visible="true" weight="0.32960895" />
+      <window_info anchor="bottom" auto_hide="true" id="Terminal" order="7" weight="0.32960895" />
       <window_info anchor="bottom" id="CheckStyle" order="8" weight="0.32960895" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
-      <window_info anchor="bottom" id="Messages" order="10" weight="0.32960895" />
+      <window_info active="true" anchor="bottom" id="Messages" order="10" visible="true" weight="0.32960895" />
       <window_info anchor="bottom" id="Database Changes" order="11" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="12" show_stripe_button="false" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -354,7 +400,7 @@
       <window_info id="Capture Tool" order="6" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32960895" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.5083799" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.7709497" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.6634078" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -391,7 +437,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="ErlangLineBreakpoint">
           <url>file://$PROJECT_DIR$/src/money.erl</url>
-          <line>23</line>
+          <line>26</line>
           <option name="timeStamp" value="68" />
         </line-breakpoint>
       </breakpoints>
@@ -609,13 +655,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://C:/Program Files/erl10.4/lib/stdlib-3.9/src/random.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1678">
-          <caret line="19" column="8" selection-start-line="19" selection-start-column="8" selection-end-line="19" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://C:/Program Files/erl10.4/lib/erts-10.4/src/erlang.erl">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="22840">
@@ -658,45 +697,73 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$USER_HOME$/Downloads/Money.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2900">
+          <caret line="157" column="29" selection-start-line="157" selection-start-column="29" selection-end-line="157" selection-end-column="50" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://C:/Program Files/erl10.4/lib/stdlib-3.9/src/lists.erl">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="26740">
+        <state relative-caret-position="284">
           <caret line="1337" selection-start-line="1337" selection-end-line="1337" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/customers.txt">
+    <entry file="file://$PROJECT_DIR$/src/money.erl">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="10" selection-start-column="10" selection-end-column="10" />
+        <state relative-caret-position="300">
+          <caret line="15" column="5" selection-start-line="15" selection-start-column="5" selection-end-line="15" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/Program Files/erl10.4/lib/crypto-4.5/src/crypto.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="28100">
+          <caret line="1405" column="34" selection-start-line="1405" selection-start-column="29" selection-end-line="1405" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/Program Files/erl10.4/lib/stdlib-3.9/src/random.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="380">
+          <caret line="19" column="11" selection-start-line="19" selection-start-column="11" selection-end-line="19" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/Program Files/erl10.4/lib/stdlib-3.9/src/rand.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="11080">
+          <caret line="554" selection-start-line="554" selection-end-line="554" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/banks.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="40">
-          <caret line="2" column="10" lean-forward="true" selection-start-line="2" selection-start-column="10" selection-end-line="2" selection-end-column="10" />
+          <caret line="2" column="8" selection-start-line="2" selection-start-column="8" selection-end-line="2" selection-end-column="8" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/customer.erl">
+    <entry file="file://$PROJECT_DIR$/src/customers.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="111">
-          <caret line="32" column="52" selection-start-line="32" selection-start-column="52" selection-end-line="32" selection-end-column="52" />
+        <state relative-caret-position="60">
+          <caret line="3" column="10" selection-start-line="3" selection-start-column="10" selection-end-line="3" selection-end-column="10" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/bank.erl">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1876">
-          <caret line="15" selection-start-line="15" selection-end-line="15" />
+        <state relative-caret-position="980">
+          <caret line="49" column="8" selection-start-line="49" selection-start-column="8" selection-end-line="49" selection-end-column="8" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/money.erl">
+    <entry file="file://$PROJECT_DIR$/src/customer.erl">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-521">
-          <caret line="15" column="7" lean-forward="true" selection-start-line="15" selection-start-column="7" selection-end-line="15" selection-end-column="7" />
+        <state relative-caret-position="214">
+          <caret line="100" column="41" selection-start-line="100" selection-start-column="41" selection-end-line="100" selection-end-column="41" />
         </state>
       </provider>
     </entry>
